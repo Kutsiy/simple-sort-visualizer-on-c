@@ -14,17 +14,23 @@ void createArray(int* array, int size)
     }
 }
 
-void drawAllRects(int* array, int size, int gap, int screenHeight) {
+void drawAllRects(int* array, int size, int gap, int screenHeight, int hindex) {
      for (int i = 0; i < size; i++)
     {
-            DrawRectangle(i * gap + 50, screenHeight - array[i], 10, array[i], RED);
+            if (i == hindex) {
+                DrawRectangle(i * gap + 50, screenHeight - array[i], 10, array[i], RED);
+            }
+            else
+            {
+                DrawRectangle(i * gap + 50, screenHeight - array[i], 10, array[i], WHITE);
+            }
     }
 }
 
 
 int main(void)
 {
-    int size = 50;
+    int size = 40;
     int gap = 14;
     int* array = malloc(size * sizeof(int));
     createArray(array, size);
@@ -35,11 +41,12 @@ int main(void)
 
     int i = 0;
     int j = 0;
+    int done = 0;
 
-    SetTargetFPS(45);    
+    SetTargetFPS(60);    
     while (!WindowShouldClose())
     {
-        if (i < size - 1) {
+        if (i < size - 1 && !done) {
             if (array[j] > array[j + 1])
         {
                 int temp = array[j];
@@ -47,7 +54,7 @@ int main(void)
                 array[j + 1] = temp;
 
         }
-        if(j < size - i - 1)
+        if(j < size - i - 2)
         {
             j++;
         }
@@ -56,12 +63,16 @@ int main(void)
             j = 0;
             i++;
         }
+        } else {
+            done = 1;
+            i = -1;
+            j = -1;
         }
 
 
         BeginDrawing();
         ClearBackground(BLACK);
-        drawAllRects(array, size, gap, screenHeight);
+        drawAllRects(array, size, gap, screenHeight, j);
         EndDrawing();
     }
 
